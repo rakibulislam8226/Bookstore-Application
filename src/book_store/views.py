@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect,  HttpResponseRedirect
 from django.contrib.auth.hashers import make_password, check_password
-from .models import Book, Customer
+from .models import Book, Customer, Order
+from .forms import BookForm
 from django.views import View
 
 
@@ -136,3 +137,40 @@ class Login(View):
 def logout(request):
     request.session.clear()
     return redirect('login')
+
+
+class Cart(View):
+    def get(self , request):
+        ids = list(request.session.get('cart').keys())
+        products = Book.get_book_by_id(ids)
+        return render(request , 'cart.html' , {'products' : products} )
+    
+
+class OrderView(View):
+    def get(self , request ):
+        customer = request.session.get('customer')
+        orders = Order.get_orders_by_customer(customer)
+        print(orders)
+        return render(request , 'orders.html'  , {'orders' : orders})
+
+
+class CheckOut(View):
+    def post(self, request):
+        address = request.POST.get('address')
+        customer = request.session.get('customer')
+        cart = request.session.get('cart')
+        products = Book.get_book_by_id(list(cart.keys()))
+
+        for product in products:
+            order = Order(customer_id=customer,
+                          book_id=product.id,
+                          price=product.price,
+                          address=address,
+                          quantity=cart.get(str(product.id)))
+            order.save()
+
+        request.session['cart'] = {}
+
+        return redirect('cart')
+    
+

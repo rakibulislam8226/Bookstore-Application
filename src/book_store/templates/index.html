@@ -9,15 +9,17 @@
 	<div class="row">
 
 		<!-- all products -->
-		<div id='products' class="col-lg-9 mx-auto">
+		<div id='products' class="col-lg-9 mx-auto p-2">
 			<div class="row mx-auto">
 				
 				{% for product in products %}
 				<div class="card mx-auto mb-3" id={{product.id}} style="width: 18rem;">
-					<img class="card-img-top" src="{{product.image.url}}" alt="Card image cap">
 					<div class="card-body">
-						<p class="card-title">{{product.name}}</p>
+						<p class="card-title" style="color: blue;">{{ product.title }}</p>
+						<p class="card-small"><span style="font-size: small; color: dark;">By: {{ product.author }}</span></p>
 						<p class="card-text"><b>{{product.price|currency}}</b></p>
+						<p class="small text-danger"><s>{{product.ex_price|currency}}</s></p>
+						<p class="card-small"><span style="font-size: small; color: dark;">Published on: {{ product.publication_date }}</span></p>
 					</div>
 
 					<div class="card-footer p-0 no-gutters">
