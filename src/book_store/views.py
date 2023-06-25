@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect,  HttpResponseRedirect
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 from .models import Book, Customer, Order
 from .forms import BookForm
 from django.views import View
@@ -174,3 +176,19 @@ class CheckOut(View):
         return redirect('cart')
     
 
+@login_required
+def add_book(request):
+    if not request.user.is_authenticated:
+        messages.error(request, 'User is not authenticated.')
+        return redirect('login')
+
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            book = form.save(commit=False)
+            book.author = request.user
+            book.save()
+            return redirect('homepage')
+    else:
+        form = BookForm()
+    return render(request, 'add_book.html', {'form': form})
