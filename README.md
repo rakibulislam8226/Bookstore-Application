@@ -3,8 +3,14 @@
 ---
 * python 3.10
 * Sqlite3
-
 ---
+<h3 style="color:red;">Warning</h3>
+<small>To add a book to the list/database and to access the API for that task using Django for the backend development there needs authenticated user. All the processes are not done here but you can log in to the admin site using 
+http://rakibulislam8226.pythonanywhere.com/admin/ 
+username = admin, 
+password = admin. 
+After the browser knows your authorizations then you can perform the API and also can add a book. Yet if those configurations need to do then let me know I will do those. </small>
+
 #### Clone the repo
 ```
 git clone git@github.com:rakibulislam8226/Bookstore-Application.git
