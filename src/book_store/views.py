@@ -4,6 +4,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.exceptions import ParseError
 from .serializers import BookSerializer, CartItemSerializer
 from .models import Book, Customer, Order
 from .forms import BookForm
@@ -199,7 +200,12 @@ def add_book(request):
 
 class AddToCartAPIView(APIView):
     def post(self, request):
-        book_serializer = BookSerializer(data=request.data['book'])
+        try:
+            book_data = request.data['book']
+        except KeyError:
+            raise ParseError(detail='Missing "book" key in the request data.')
+
+        book_serializer = BookSerializer(data=book_data)
         cart_item_serializer = CartItemSerializer(data=request.data)
 
         book_serializer.is_valid(raise_exception=True)
