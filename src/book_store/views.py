@@ -2,6 +2,9 @@ from django.shortcuts import render, redirect,  HttpResponseRedirect
 from django.contrib.auth.hashers import make_password, check_password
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from .serializers import BookSerializer, CartItemSerializer
 from .models import Book, Customer, Order
 from .forms import BookForm
 from django.views import View
@@ -192,3 +195,30 @@ def add_book(request):
     else:
         form = BookForm()
     return render(request, 'add_book.html', {'form': form})
+
+
+class AddToCartAPIView(APIView):
+    def post(self, request):
+        book_serializer = BookSerializer(data=request.data['book'])
+        cart_item_serializer = CartItemSerializer(data=request.data)
+
+        book_serializer.is_valid(raise_exception=True)
+        cart_item_serializer.is_valid(raise_exception=True)
+
+        book = book_serializer.save()
+        cart_item = cart_item_serializer.save(book=book)
+
+        return Response(CartItemSerializer(cart_item).data, status=201)
+
+# raw data for passing into api.
+"""
+{
+    "book": {
+        "title": "Book Title",
+        "author": 1,
+        "price": 9.99,
+        "publication_date": "2023-06-25"
+    },
+    "quantity": 1
+}
+"""

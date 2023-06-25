@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Book, Order, Customer
+from .models import Book, Order, Customer, CartItem
 
 # Register your models here.
 @admin.register(Book)
@@ -24,3 +24,5 @@ class OrderAdmin(admin.ModelAdmin):
 class CustomerAdmin(admin.ModelAdmin):
     list_display = ('email', 'phone')
     search_fields = ('email', 'phone')
+
+admin.site.register(CartItem)

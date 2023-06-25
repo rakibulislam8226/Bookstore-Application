@@ -18,4 +18,5 @@ urlpatterns = [
     path('orders', auth_middleware(OrderView.as_view()), name='orders'),
 
     path('books/add/', add_book, name='add_book'), 
+    path('api/cart/add/', AddToCartAPIView.as_view(), name='add-to-cart'),
 ]
